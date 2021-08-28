@@ -4,6 +4,11 @@
       "name": "discord.token",
       "type": "java.lang.String",
       "description": "Token used for the Discord gateway authentication."
+    },
+    {
+      "name": "discord.test-guild",
+      "type": "java.lang.String",
+      "description": "Test guild where the application commands should be registered during development."
     }
   ]
 }

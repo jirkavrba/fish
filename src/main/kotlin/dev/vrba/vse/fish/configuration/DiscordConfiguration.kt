@@ -6,5 +6,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConfigurationProperties(prefix = "discord")
 class DiscordConfiguration {
+
     lateinit var token: String
+
+    var testGuild: Long = 0L
 }
