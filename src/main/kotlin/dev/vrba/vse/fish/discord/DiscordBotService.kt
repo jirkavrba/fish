@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 
 @Service
-class DiscordBotService(configuration: DiscordConfiguration) {
+class DiscordBotService(configuration: DiscordConfiguration, private val modules: List<DiscordModule>) {
 
     private val client: JDA = JDABuilder.createDefault(configuration.token).build()
 
     @Bean
     fun jda(): JDA = client
 
-    fun start() {}
+    fun start() = modules.map { it.register(client) }
 }
