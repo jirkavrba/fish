@@ -13,4 +13,6 @@ class DiscordBotService(configuration: DiscordConfiguration) {
 
     @Bean
     fun jda(): JDA = client
+
+    fun start() {}
 }
