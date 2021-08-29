@@ -1,4 +1,4 @@
-package dev.vrba.vse.fish.discord.modules
+package dev.vrba.vse.fish.discord.modules.status
 
 import dev.vrba.vse.fish.discord.DiscordModule
 import dev.vrba.vse.fish.discord.SlashCommandsProvider
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 
 @Component
-class StatusModule : SlashCommandsProvider {
+class StatusCommandsProvider : SlashCommandsProvider {
 
     override val commands: List<CommandData> = listOf(
         CommandData("ping", "Just a test command")
@@ -24,7 +24,7 @@ class StatusModule : SlashCommandsProvider {
 
     private fun handlePing(event: SlashCommandEvent) = event.replyEmbeds(
         EmbedBuilder()
-            .setTitle("Pong")
+            .setTitle("Pong 🏓")
             .setTimestamp(Instant.now())
             .build()
     ).queue()
