@@ -1,6 +1,7 @@
 package dev.vrba.vse.fish.discord
 
 import dev.vrba.vse.fish.configuration.DiscordConfiguration
+import dev.vrba.vse.fish.discord.utilities.DiscordEmbeds
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
@@ -51,6 +52,20 @@ class DiscordBotService(
         modules.map { it.register(client) }
     }
 
-    // TODO: Better handle this nullability check
-    override fun onSlashCommand(event: SlashCommandEvent) = commands[event.commandId]?.handle(event) ?: Unit
+    override fun onSlashCommand(event: SlashCommandEvent) {
+        val provider = commands[event.commandId] ?: return
+
+        try {
+            provider.handle(event)
+        }
+        catch (exception: Throwable) {
+            val embed = DiscordEmbeds.error(
+                "There was an error during the command execution",
+                "**```${exception.message}```**\n```${exception.stackTraceToString().substring(0..3000)}```"
+            )
+
+            if (event.isAcknowledged) event.hook.editOriginalEmbeds(embed).queue()
+            else event.replyEmbeds(embed).queue()
+        }
+    }
 }
