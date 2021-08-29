@@ -1,3 +1,9 @@
 discord:
   token: ${DISCORD_TOKEN}
   test-guild: 691227762102501436
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fish
+    username: fish
+    password: fish
