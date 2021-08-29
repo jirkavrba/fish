@@ -1,11 +1,11 @@
 package dev.vrba.vse.fish.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.Configuration
+import org.springframework.boot.context.properties.ConstructorBinding
 
-@Configuration
+@ConstructorBinding
 @ConfigurationProperties(prefix = "discord")
 data class DiscordConfiguration (
-    var token: String = "",
-    var testGuild: Long = 0L
+    val token: String,
+    val testGuild: Long
 )

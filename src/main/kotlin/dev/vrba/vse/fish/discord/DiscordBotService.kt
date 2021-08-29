@@ -20,15 +20,14 @@ class DiscordBotService(
     providers: List<SlashCommandsProvider>
 ) : ListenerAdapter() {
 
-    private val client: JDA = JDABuilder.createDefault(configuration.token).build()
+    private val client: JDA = JDABuilder.createDefault(configuration.token).build().awaitReady()
 
-    private val handlers: Map<String, SlashCommandsProvider> by lazy {
+    private val commands: Map<String, SlashCommandsProvider> =
         providers.flatMap { provider ->
             provider.commands
                 .map { registerCommand(it) }
                 .map { it.id to provider }
         }.toMap()
-    }
 
     private fun registerCommand(command: CommandData): Command {
         // If the application is running in the development mode,
@@ -53,5 +52,5 @@ class DiscordBotService(
     }
 
     // TODO: Better handle this nullability check
-    override fun onSlashCommand(event: SlashCommandEvent) = handlers[event.commandId]?.handle(event) ?: Unit
+    override fun onSlashCommand(event: SlashCommandEvent) = commands[event.commandId]?.handle(event) ?: Unit
 }
