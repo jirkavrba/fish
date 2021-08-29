@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 
 @Component
-class StatusModule : DiscordModule, SlashCommandsProvider {
+class StatusModule : SlashCommandsProvider {
 
     override val commands: List<CommandData> = listOf(
         CommandData("ping", "Just a test command")
@@ -21,8 +21,6 @@ class StatusModule : DiscordModule, SlashCommandsProvider {
             "ping" -> handlePing(event)
         }
     }
-
-    override fun register(client: JDA) = Unit
 
     private fun handlePing(event: SlashCommandEvent) = event.replyEmbeds(
         EmbedBuilder()
