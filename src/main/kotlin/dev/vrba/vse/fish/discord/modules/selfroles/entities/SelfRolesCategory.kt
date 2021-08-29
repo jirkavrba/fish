@@ -20,7 +20,7 @@ import javax.persistence.*
 data class SelfRolesCategory(
     @Id
     @GeneratedValue
-    val id: Long,
+    var id: Long = 0L,
 
     val name: String,
 
