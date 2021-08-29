@@ -8,14 +8,14 @@ object DiscordEmbeds {
     fun error(title: String, description: String? = null): MessageEmbed = EmbedBuilder()
         .setTitle(title)
         .setDescription(description ?: "")
-        .setColor(0xED4245)
+        .setColor(DiscordColors.red)
         .setTimestamp(Instant.now())
         .build()
 
     fun success(title: String, description: String? = null): MessageEmbed = EmbedBuilder()
         .setTitle(title)
         .setDescription(description ?: "")
-        .setColor(0x57F287)
+        .setColor(DiscordColors.green)
         .setTimestamp(Instant.now())
         .build()
 }

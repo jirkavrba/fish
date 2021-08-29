@@ -3,6 +3,7 @@ package dev.vrba.vse.fish.discord.modules.selfroles
 import dev.vrba.vse.fish.discord.SlashCommandsProvider
 import dev.vrba.vse.fish.discord.modules.selfroles.entities.SelfRolesCategory
 import dev.vrba.vse.fish.discord.modules.selfroles.repositories.SelfRoleCategoriesRepository
+import dev.vrba.vse.fish.discord.utilities.DiscordColors
 import dev.vrba.vse.fish.discord.utilities.DiscordEmbeds
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
@@ -58,7 +59,7 @@ class SelfRoleCommandsProvider(
         )
 
         updateCategoryMessage(message, categoriesRepository.save(category))
-        interaction.editOriginalEmbeds(DiscordEmbeds.success("Role menu created")).queue()
+        interaction.editOriginalEmbeds(DiscordEmbeds.success("Self role category *${category.name}* created")).queue()
     }
 
     private fun createRoleCategory(event: SlashCommandEvent) {
@@ -69,7 +70,7 @@ class SelfRoleCommandsProvider(
         val embed = EmbedBuilder()
             .setTitle(category.name)
             .setDescription(category.roles.joinToString("\n") { "${it.emoji}: <@&${it.role}>" })
-            .setColor(0x5865F2)
+            .setColor(DiscordColors.yellow)
             .setTimestamp(Instant.now())
             .build()
 
