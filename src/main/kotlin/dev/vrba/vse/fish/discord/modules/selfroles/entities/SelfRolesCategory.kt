@@ -16,7 +16,7 @@ import javax.persistence.*
         )
     ]
 )
-class SelfRolesCategory(
+data class SelfRolesCategory(
     @Id
     @GeneratedValue
     val id: Long,
@@ -27,4 +27,7 @@ class SelfRolesCategory(
     val guild: Long,
     val channel: Long,
     val message: Long,
+
+    @OneToMany(mappedBy = "category")
+    val roles: List<SelfRole>
 )
