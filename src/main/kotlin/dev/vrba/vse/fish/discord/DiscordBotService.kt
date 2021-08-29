@@ -22,11 +22,13 @@ class DiscordBotService(
 
     private val client: JDA = JDABuilder.createDefault(configuration.token).build()
 
-    private val handlers: Map<String, SlashCommandsProvider> = providers.flatMap {
-            provider -> provider.commands
+    private val handlers: Map<String, SlashCommandsProvider> by lazy {
+        providers.flatMap { provider ->
+            provider.commands
                 .map { registerCommand(it) }
-                .map { it.id to provider}
-    }.toMap()
+                .map { it.id to provider }
+        }.toMap()
+    }
 
     private fun registerCommand(command: CommandData): Command {
         // If the application is running in the development mode,
