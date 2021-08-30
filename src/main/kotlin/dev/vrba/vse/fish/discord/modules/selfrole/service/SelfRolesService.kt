@@ -27,11 +27,13 @@ class SelfRolesService(
         )
     }
 
-    fun updateSelfRoleMenu(client: JDA, category: SelfRoleCategory) {
-        val channel = client.getGuildChannelById(category.channelId) as? TextChannel
-        val message = channel?.retrieveMessageById(category.messageId)?.complete()
-            ?: throw IllegalStateException("Cannot find the role menu message")
+    fun deleteSelfRoleCategory(name: String): SelfRoleCategory {
+        return categoriesRepository.findByName(name)?.also { categoriesRepository.delete(it) }
+            ?: throw IllegalArgumentException("Cannot find category with the provided name")
+    }
 
+    fun updateSelfRoleMenu(client: JDA, category: SelfRoleCategory) {
+        val message = findSelfRoleMenuMessage(client, category)
         val roles = category.roles
             .joinToString("\n") { "${it.emoji}: <@&${it.roleId}>" }
             .ifEmpty { "_There are no self assignable roles yet_" }
@@ -46,6 +48,20 @@ class SelfRolesService(
         ).queue()
 
         category.roles.forEach { message.addReaction(it.emoji).queue() }
+    }
+
+    fun deleteSelfRoleMenu(client: JDA, category: SelfRoleCategory) {
+        findSelfRoleMenuMessage(client, category)
+            .delete()
+            .queue()
+    }
+
+    private fun findSelfRoleMenuMessage(client: JDA, category: SelfRoleCategory): Message {
+        val channel = client.getGuildChannelById(category.channelId) as? TextChannel
+        val message = channel?.retrieveMessageById(category.messageId)?.complete()
+            ?: throw IllegalStateException("Cannot find the role menu message")
+
+        return message
     }
 
 }

@@ -5,4 +5,8 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface SelfRoleCategoriesRepository : CrudRepository<SelfRoleCategory, Long>
+interface SelfRoleCategoriesRepository : CrudRepository<SelfRoleCategory, Long> {
+
+    fun findByName(name: String): SelfRoleCategory?
+
+}

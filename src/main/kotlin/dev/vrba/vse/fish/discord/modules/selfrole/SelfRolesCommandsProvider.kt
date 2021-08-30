@@ -40,7 +40,7 @@ class SelfRolesCommandsProvider(private val service: SelfRolesService) : SlashCo
     override fun handle(event: SlashCommandEvent) {
         when (event.subcommandName) {
             "create-category" -> createSelfRoleCategory(event)
-            "delete-category" -> Unit
+            "delete-category" -> deleteSelfRoleCategory(event)
             "bind" -> Unit
             "unbind" -> Unit
             else -> throw IllegalArgumentException("Subcommand not found")
@@ -72,4 +72,14 @@ class SelfRolesCommandsProvider(private val service: SelfRolesService) : SlashCo
         interaction.editOriginalEmbeds(DiscordEmbeds.success("Self role category ${category.name} created.")).queue()
     }
 
+    private fun deleteSelfRoleCategory(event: SlashCommandEvent) {
+        val name = event.getOption("name")?.asString ?: throw IllegalArgumentException("Missing the `name` parameter")
+
+        val interaction = event.deferReply().complete()
+        val category = service.deleteSelfRoleCategory(name)
+
+        service.deleteSelfRoleMenu(event.jda, category)
+
+        interaction.editOriginalEmbeds(DiscordEmbeds.success("Self role category ${category.name} deleted.")).queue()
+    }
 }
