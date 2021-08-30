@@ -1,14 +1,21 @@
 package dev.vrba.vse.fish.discord.modules.selfrole
 
 import dev.vrba.vse.fish.discord.SlashCommandsProvider
+import dev.vrba.vse.fish.discord.modules.selfrole.service.SelfRolesService
+import dev.vrba.vse.fish.discord.utilities.DiscordColors
+import dev.vrba.vse.fish.discord.utilities.DiscordEmbeds
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import org.springframework.stereotype.Component
+import java.lang.RuntimeException
+import java.time.Instant
 
 @Component
-class SelfRolesCommandsProvider : SlashCommandsProvider {
+class SelfRolesCommandsProvider(private val service: SelfRolesService) : SlashCommandsProvider {
 
     override val commands: List<CommandData> = listOf(
         CommandData("selfrole", "Manages self-assignable user roles + categories")
@@ -32,8 +39,7 @@ class SelfRolesCommandsProvider : SlashCommandsProvider {
 
     override fun handle(event: SlashCommandEvent) {
         when (event.subcommandName) {
-            // TODO: Implement those subcommands
-            "create-category" -> Unit
+            "create-category" -> createSelfRoleCategory(event)
             "delete-category" -> Unit
             "bind" -> Unit
             "unbind" -> Unit
@@ -41,5 +47,29 @@ class SelfRolesCommandsProvider : SlashCommandsProvider {
         }
     }
 
+    private fun createSelfRoleCategory(event: SlashCommandEvent) {
+        val channel = event.getOption("channel")?.asGuildChannel ?: throw IllegalArgumentException("Missing the `channel` parameter")
+        val name = event.getOption("name")?.asString ?: throw IllegalArgumentException("Missing the `name` parameter")
+
+        if (channel !is TextChannel) {
+            throw IllegalArgumentException("The provided channel is not a text channel.")
+        }
+
+        val message = channel.sendMessageEmbeds(
+            EmbedBuilder()
+                .setTitle("Creating a new role menu...")
+                .setDescription("This shouldn't take long..")
+                .setColor(DiscordColors.blurple)
+                .setTimestamp(Instant.now())
+                .build()
+        ).complete() ?: throw RuntimeException("There was an error during creating the role menu message")
+
+        val interaction = event.deferReply().complete()
+        val category = service.createSelfRoleCategory(name, message)
+
+        service.updateSelfRoleMenu(event.jda, category)
+
+        interaction.editOriginalEmbeds(DiscordEmbeds.success("Self role category ${category.name} created.")).queue()
+    }
 
 }

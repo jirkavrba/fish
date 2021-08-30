@@ -13,8 +13,8 @@ class SelfRoleCategory(
 
     val channelId: Long,
 
-    val messageId: Long
-) {
+    val messageId: Long,
+
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    lateinit var roles: MutableList<SelfRole>
-}
+    var roles: MutableList<SelfRole> = mutableListOf()
+)
