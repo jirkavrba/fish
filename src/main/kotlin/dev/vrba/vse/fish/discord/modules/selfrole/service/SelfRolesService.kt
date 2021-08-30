@@ -82,17 +82,17 @@ class SelfRolesService(
             ?: throw IllegalArgumentException("Cannot find category with the provided name")
 
         val selfRole = SelfRole(
-            id = 0,
             emoji = emoji,
             roleId = role.idLong,
             category = category
         )
 
-        // TODO: Fix this Hibernate fuckery
-        categoriesRepository.save(category)
-        rolesRepository.save(selfRole)
+        category.roles.add(selfRole)
 
-        return selfRole.apply { this.category = category }
+        rolesRepository.save(selfRole)
+        categoriesRepository.save(category)
+
+        return selfRole
     }
 
 }
