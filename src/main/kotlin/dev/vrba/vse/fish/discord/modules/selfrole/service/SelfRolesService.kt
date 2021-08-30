@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.TextChannel
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import java.time.Instant
 
 @Service
@@ -29,6 +30,17 @@ class SelfRolesService(
     fun deleteSelfRoleCategory(name: String): SelfRoleCategory {
         return categoriesRepository.findByName(name)?.also { categoriesRepository.delete(it) }
             ?: throw IllegalArgumentException("Cannot find category with the provided name")
+    }
+
+    fun createSelfRoleMenu(channel: TextChannel): Message {
+        return channel.sendMessageEmbeds(
+            EmbedBuilder()
+                .setTitle("Creating a new role menu...")
+                .setDescription("This shouldn't take long..")
+                .setColor(DiscordColors.blurple)
+                .setTimestamp(Instant.now())
+                .build()
+        ).complete() ?: throw RuntimeException("There was an error during creating the role menu message")
     }
 
     fun updateSelfRoleMenu(client: JDA, category: SelfRoleCategory) {

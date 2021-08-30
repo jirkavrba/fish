@@ -55,16 +55,9 @@ class SelfRolesCommandsProvider(private val service: SelfRolesService) : SlashCo
             throw IllegalArgumentException("The provided channel is not a text channel.")
         }
 
-        val message = channel.sendMessageEmbeds(
-            EmbedBuilder()
-                .setTitle("Creating a new role menu...")
-                .setDescription("This shouldn't take long..")
-                .setColor(DiscordColors.blurple)
-                .setTimestamp(Instant.now())
-                .build()
-        ).complete() ?: throw RuntimeException("There was an error during creating the role menu message")
-
         val interaction = event.deferReply().complete()
+
+        val message = service.createSelfRoleMenu(channel)
         val category = service.createSelfRoleCategory(name, message)
 
         service.updateSelfRoleMenu(event.jda, category)
