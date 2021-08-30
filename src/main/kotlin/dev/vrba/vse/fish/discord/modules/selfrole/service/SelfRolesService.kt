@@ -6,7 +6,6 @@ import dev.vrba.vse.fish.discord.modules.selfrole.repositories.SelfRolesReposito
 import dev.vrba.vse.fish.discord.utilities.DiscordColors
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.TextChannel
 import org.springframework.stereotype.Service
