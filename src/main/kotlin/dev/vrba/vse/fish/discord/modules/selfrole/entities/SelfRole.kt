@@ -13,9 +13,8 @@ class SelfRole(
 
     @Column(nullable = false)
     val roleId: Long,
-) {
 
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    lateinit var category: SelfRoleCategory
-}
+    var category: SelfRoleCategory
+)
