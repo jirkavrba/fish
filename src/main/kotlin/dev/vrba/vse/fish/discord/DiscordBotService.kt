@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.core.env.Profiles
 import org.springframework.stereotype.Service
+import java.util.logging.Logger
+import kotlin.math.min
 
 @Service
 class DiscordBotService(
@@ -29,6 +31,8 @@ class DiscordBotService(
                 .map { registerCommand(it) }
                 .map { it.id to provider }
         }.toMap()
+
+    private val logger = Logger.getLogger(this::class.qualifiedName)
 
     private fun registerCommand(command: CommandData): Command {
         // If the application is running in the development mode,
@@ -59,13 +63,17 @@ class DiscordBotService(
             provider.handle(event)
         }
         catch (exception: Throwable) {
+            val stacktrace = exception.stackTraceToString()
             val embed = DiscordEmbeds.error(
                 "There was an error during the command execution",
-                "**```${exception.message}```**\n```${exception.stackTraceToString().substring(0..3000)}```"
+                "**```${exception.message}```**\n```${stacktrace.substring(0, min(3000, stacktrace.length))}```"
             )
 
             if (event.isAcknowledged) event.hook.editOriginalEmbeds(embed).queue()
             else event.replyEmbeds(embed).queue()
+
+            logger.severe(exception.message)
+            logger.severe(exception.stackTraceToString())
         }
     }
 }
