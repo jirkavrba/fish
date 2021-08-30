@@ -9,10 +9,10 @@ class SelfRole(
     var id: Long = 0,
 
     @Column(nullable = false)
-    var emoji: String,
+    val emoji: String,
 
     @Column(nullable = false)
-    var roleId: Long,
+    val roleId: Long,
 ) {
 
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)

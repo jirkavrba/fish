@@ -12,6 +12,7 @@ class SelfRoleCategory(
     val name: String,
 
     val channelId: Long,
+
     val messageId: Long
 ) {
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
