@@ -63,11 +63,12 @@ class DiscordBotService(
             provider.handle(event)
         }
         catch (exception: Throwable) {
-            val stacktrace = exception.stackTraceToString()
-            val embed = DiscordEmbeds.error(
-                "There was an error during the command execution",
-                "**```${exception.message}```**\n```${stacktrace.substring(0, min(3000, stacktrace.length))}```"
-            )
+            val embed = DiscordEmbeds.errorBuilder("There was an error during the command execution")
+                .apply {
+                    addField("Exception", "`${exception::class.qualifiedName}`", false)
+                    addField("Message", "**```${exception.message}```**", false)
+                }
+                .build()
 
             if (event.isAcknowledged) event.hook.editOriginalEmbeds(embed).queue()
             else event.replyEmbeds(embed).queue()

@@ -1,5 +1,6 @@
 package dev.vrba.vse.fish.discord.modules.selfrole.service
 
+import dev.vrba.vse.fish.discord.modules.selfrole.entities.SelfRole
 import dev.vrba.vse.fish.discord.modules.selfrole.entities.SelfRoleCategory
 import dev.vrba.vse.fish.discord.modules.selfrole.repositories.SelfRoleCategoriesRepository
 import dev.vrba.vse.fish.discord.modules.selfrole.repositories.SelfRolesRepository
@@ -7,6 +8,7 @@ import dev.vrba.vse.fish.discord.utilities.DiscordColors
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
@@ -73,6 +75,24 @@ class SelfRolesService(
 
         return message?.complete()
             ?: throw IllegalStateException("Cannot find the role menu message")
+    }
+
+    fun createSelfRole(name: String, emoji: String, role: Role): SelfRole {
+        val category = categoriesRepository.findByName(name)
+            ?: throw IllegalArgumentException("Cannot find category with the provided name")
+
+        val selfRole = SelfRole(
+            id = 0,
+            emoji = emoji,
+            roleId = role.idLong,
+            category = category
+        )
+
+        // TODO: Fix this Hibernate fuckery
+        categoriesRepository.save(category)
+        rolesRepository.save(selfRole)
+
+        return selfRole.apply { this.category = category }
     }
 
 }

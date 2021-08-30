@@ -41,7 +41,7 @@ class SelfRolesCommandsProvider(private val service: SelfRolesService) : SlashCo
         when (event.subcommandName) {
             "create-category" -> createSelfRoleCategory(event)
             "delete-category" -> deleteSelfRoleCategory(event)
-            "bind" -> Unit
+            "bind" -> bindSelfRole(event)
             "unbind" -> Unit
             else -> throw IllegalArgumentException("Subcommand not found")
         }
@@ -74,5 +74,18 @@ class SelfRolesCommandsProvider(private val service: SelfRolesService) : SlashCo
         service.deleteSelfRoleMenu(event.jda, category)
 
         interaction.editOriginalEmbeds(DiscordEmbeds.success("Self role category ${category.name} deleted.")).queue()
+    }
+
+    private fun bindSelfRole(event: SlashCommandEvent) {
+        val category = event.getOption("category")?.asString ?: throw IllegalArgumentException("Missing the `category` parameter")
+        val emoji = event.getOption("emoji")?.asString ?: throw IllegalArgumentException("Missing the `emoji` parameter")
+        val role = event.getOption("role")?.asRole ?: throw IllegalArgumentException("Missing the `role` parameter")
+
+        val interaction = event.deferReply().complete()
+        val selfRole = service.createSelfRole(category, emoji, role)
+
+        service.updateSelfRoleMenu(event.jda, selfRole.category)
+
+        interaction.editOriginalEmbeds(DiscordEmbeds.success("Self role bound to ${selfRole.emoji}")).queue()
     }
 }
