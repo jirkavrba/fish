@@ -31,7 +31,14 @@ class SelfRolesCommandsProvider : SlashCommandsProvider {
     )
 
     override fun handle(event: SlashCommandEvent) {
-        TODO("Not yet implemented")
+        when (event.subcommandName) {
+            // TODO: Implement those subcommands
+            "create-category" -> Unit
+            "delete-category" -> Unit
+            "bind" -> Unit
+            "unbind" -> Unit
+            else -> throw IllegalArgumentException("Subcommand not found")
+        }
     }
 
 
