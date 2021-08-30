@@ -1,9 +1,6 @@
 package dev.vrba.vse.fish.discord.modules.selfrole.entities
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class SelfRoleCategory(
@@ -16,4 +13,7 @@ class SelfRoleCategory(
 
     val channelId: Long,
     val messageId: Long
-)
+) {
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    lateinit var roles: MutableList<SelfRole>
+}
