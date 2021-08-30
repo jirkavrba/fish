@@ -57,10 +57,10 @@ class SelfRolesService(
 
     private fun findSelfRoleMenuMessage(client: JDA, category: SelfRoleCategory): Message {
         val channel = client.getGuildChannelById(category.channelId) as? TextChannel
-        val message = channel?.retrieveMessageById(category.messageId)?.complete()
-            ?: throw IllegalStateException("Cannot find the role menu message")
+        val message = channel?.retrieveMessageById(category.messageId)
 
-        return message
+        return message?.complete()
+            ?: throw IllegalStateException("Cannot find the role menu message")
     }
 
 }
